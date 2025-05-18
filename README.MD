@@ -4,16 +4,10 @@
 ProtectMyApp是一个旨在提高Android工控应用在工控设备上的存活率的项目。通过一系列保活技术，帮助应用在用户未主动关闭的情况下尽可能长时间地运行用户app。
 本项目专门为安卓工控设备开发，工控机需要root权限
 
-## 项目统计
-
-[![GitHub Stars](https://img.shields.io/github/stars/super-jarvis/ProtectMyApp?style=social)](https://github.com/super-jarvis/ProtectMyApp)
-[![GitHub Forks](https://img.shields.io/github/forks/super-jarvis/ProtectMyApp?style=social)](https://github.com/super-jarvis/ProtectMyApp)
-
 ## 功能模块TODO清单
 
 - [ ] 基础框架的搭建，权限清单以及权限申请
-- [ ] 实现安卓启动器以及相关功能
-- [ ] 完成前台服务模块的实现
+- [ ] 完成前台服务模块的实现，程序做成安卓启动器
 - [ ] 实现系统事件监听和重启机制
 - [ ] 优化与其他组件的协作确保主进程不被杀死
 - [ ] 集成并完善WorkManager定时任务保活功能
@@ -21,8 +15,6 @@ ProtectMyApp是一个旨在提高Android工控应用在工控设备上的存活�
 - [ ] 设计和实现多个Webhooks功能
 - [ ] 提供详细的设置界面调整保活参数，指定保活的app
 - [ ] 可配置自动集成安装Rustdesk服务实现远程控制能力
-- [ ] 集成http服务，实现应用与启动器之间的通信
-- [ ] 实现一些简单的远程指令控制能力，要考虑安全性
 
 ## 第三方开源库清单
 
@@ -31,6 +23,7 @@ ProtectMyApp是一个旨在提高Android工控应用在工控设备上的存活�
 - [ ] OkHttp: 一个高效的HTTP客户端
 - [ ] Glide: 快速、高效的图片加载库
 - [ ] Room: 持久化库，提供SQLite抽象层
+- [ ] LiveData: 可观察的数据存储器
 - [ ] ViewModel: 存储和管理与UI相关的数据
 - [ ] Navigation Component: 简化应用内的导航逻辑
 - [ ] MQTT Android Service: 提供MQTT协议支持

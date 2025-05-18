@@ -56,4 +56,16 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.utilcodex)
+//    implementation(libs.bundles.retrofit)
+
+    // AndroidX Startup
+    implementation(libs.androidx.startup.runtime)
+//    implementation(libs.androidx.work)
+
+//    implementation("io.coil-kt.coil3:coil-compose:3.2.0")
+//    implementation("io.insert-koin:koin-android:3.5.0")
+//    implementation("io.insert-koin:koin-androidx-compose:3.5.0")
+
 }
