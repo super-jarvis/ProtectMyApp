@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Protect My App"
+rootProject.name = "ProtectMyApp"
 include(":app")
  
