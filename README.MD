@@ -29,7 +29,6 @@ ProtectMyApp是一个旨在提高Android工控应用在工控设备上的存活�
 - [ ] OkHttp: 一个高效的HTTP客户端
 - [ ] Glide: 快速、高效的图片加载库
 - [ ] Room: 持久化库，提供SQLite抽象层
-- [ ] LiveData: 可观察的数据存储器
 - [ ] ViewModel: 存储和管理与UI相关的数据
 - [ ] Navigation Component: 简化应用内的导航逻辑
 - [ ] MQTT Android Service: 提供MQTT协议支持
