@@ -9,12 +9,11 @@ ProtectMyApp是一个旨在提高Android工控应用在工控设备上的存活�
 [![GitHub Stars](https://img.shields.io/github/stars/super-jarvis/ProtectMyApp?style=social)](https://github.com/super-jarvis/ProtectMyApp)
 [![GitHub Forks](https://img.shields.io/github/forks/super-jarvis/ProtectMyApp?style=social)](https://github.com/super-jarvis/ProtectMyApp)
 
-请将 `yourusername` 替换为你的GitHub用户名或组织名称，以正确显示统计信息。
-
 ## 功能模块TODO清单
 
 - [ ] 基础框架的搭建，权限清单以及权限申请
-- [ ] 完成前台服务模块的实现，程序做成安卓启动器
+- [ ] 实现安卓启动器以及相关功能
+- [ ] 完成前台服务模块的实现
 - [ ] 实现系统事件监听和重启机制
 - [ ] 优化与其他组件的协作确保主进程不被杀死
 - [ ] 集成并完善WorkManager定时任务保活功能
