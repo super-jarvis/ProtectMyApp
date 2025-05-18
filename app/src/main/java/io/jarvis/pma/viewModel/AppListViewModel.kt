@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.AppUtils.AppInfo
 import com.blankj.utilcode.util.IntentUtils
 import com.blankj.utilcode.util.PermissionUtils
+import com.blankj.utilcode.util.SPStaticUtils
 import io.jarvis.pma.receiver.SysIntentReceiver
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,7 @@ object AppListViewModel : ViewModel() {
     val intent: SharedFlow<AppListIntent> = _intent
 
     /// 待保护包名
-    val protectPackage = MutableStateFlow("")
+    val protectPackage = MutableStateFlow(SPStaticUtils.getString("protect_package", ""))
 
     init {
         handleIntent()
@@ -47,6 +48,7 @@ object AppListViewModel : ViewModel() {
 
                     is AppListIntent.Protect -> {
                         protectPackage.tryEmit(appListIntent.packageName)
+                        SPStaticUtils.put("protect_package", appListIntent.packageName)
                     }
 
                     is AppListIntent.Install -> {
