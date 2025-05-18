@@ -4,6 +4,13 @@
 ProtectMyApp是一个旨在提高Android工控应用在工控设备上的存活率的项目。通过一系列保活技术，帮助应用在用户未主动关闭的情况下尽可能长时间地运行用户app。
 本项目专门为安卓工控设备开发，工控机需要root权限
 
+## 项目统计
+
+[![GitHub Stars](https://img.shields.io/github/stars/super-jarvis/ProtectMyApp?style=social)](https://github.com/super-jarvis/ProtectMyApp)
+[![GitHub Forks](https://img.shields.io/github/forks/super-jarvis/ProtectMyApp?style=social)](https://github.com/super-jarvis/ProtectMyApp)
+
+请将 `yourusername` 替换为你的GitHub用户名或组织名称，以正确显示统计信息。
+
 ## 功能模块TODO清单
 
 - [ ] 基础框架的搭建，权限清单以及权限申请
