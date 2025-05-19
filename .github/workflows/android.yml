@@ -2,9 +2,12 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
     paths:
       - "app/**"
+
+env:
+  TAG_NAME: ${{ github.ref_name }}
 
 jobs:
   build:
@@ -12,30 +15,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
+      - uses: actions/checkout@v4
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          cache: gradle
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew assembleRelease
 
-    - name: Upload APK artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: app-release
-        path: app/build/outputs/apk/release/*.apk
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: app/build/outputs/apk/release/*.apk
 
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v4
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        files: app/build/outputs/apk/release/*.apk
+#      - name: Create GitHub Release
+#        uses: softprops/action-gh-release@v4
+#        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GH_TOEKN }}
+#        with:
+#          tag_name: ${{ github.ref }}
+#          files: |
+#            app/build/outputs/apk/release/*.apk
