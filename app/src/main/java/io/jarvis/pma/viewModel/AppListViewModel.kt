@@ -1,11 +1,9 @@
 package io.jarvis.pma.viewModel
 
-import android.os.Build
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.AppUtils.AppInfo
 import com.blankj.utilcode.util.IntentUtils
-import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPStaticUtils
 import io.jarvis.pma.receiver.SysIntentReceiver
 import io.jarvis.pma.viewModel.mvi.BaseViewModel
@@ -52,11 +50,11 @@ object AppListViewModel : BaseViewModel<AppListViewState, AppListIntent>() {
     }
 
     private fun getInstalledApps(): List<AppInfo> {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            PermissionUtils.permission(android.Manifest.permission.QUERY_ALL_PACKAGES).request()
-            if (!PermissionUtils.isGranted(android.Manifest.permission.QUERY_ALL_PACKAGES))
-                return emptyList()
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            PermissionUtils.permission(android.Manifest.permission.QUERY_ALL_PACKAGES).request()
+//            if (!PermissionUtils.isGranted(android.Manifest.permission.QUERY_ALL_PACKAGES))
+//                return emptyList()
+//        }
         return AppUtils.getAppsInfo().asSequence().sortedBy { it.name }
             .filter { null != IntentUtils.getLaunchAppIntent(it.packageName) }
             .filter { it.packageName != AppUtils.getAppPackageName() }

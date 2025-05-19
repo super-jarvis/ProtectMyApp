@@ -6,18 +6,15 @@ import android.content.Intent
 import android.os.SystemClock
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ProcessUtils
 import io.jarvis.pma.utils.DeviceTool
 import io.jarvis.pma.viewModel.AppListViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class TimeTickReceiver : BroadcastReceiver() {
 
     companion object {
         @Volatile
         var lastTime: Long = 0L
-        private val coroutineScope = CoroutineScope(Dispatchers.IO)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -27,19 +24,24 @@ class TimeTickReceiver : BroadcastReceiver() {
                 return
             }
             lastTime = SystemClock.uptimeMillis()
+            var isFront = false
+            if (AppListViewModel.protectPackage.value.isNotBlank()) {
+                isFront = DeviceTool.checkIsFront(AppListViewModel.protectPackage.value)
+            }
             if (AppUtils.isAppDebug()) {
-                LogUtils.d("守护app中...")
+                LogUtils.d(
+                    "守护app中 protecting=${AppListViewModel.protectStatFlow.value} " +
+                            "packageName=${AppListViewModel.protectPackage.value} " +
+                            "isFront=$isFront " +
+                            "process=${ProcessUtils.getForegroundProcessName()}"
+                )
             }
-            coroutineScope.launch {
-                AppListViewModel.protectStatFlow.collect {
-                    if (AppUtils.isAppDebug()) {
-                        LogUtils.d("保活app中 $it")
-                    }
-                    if (it) DeviceTool.checkIsFront(AppListViewModel.protectPackage.value)
-                }
-            }
+            if (AppListViewModel.protectStatFlow.value
+                && AppListViewModel.protectPackage.value.isNotBlank()
+                && !isFront && !AppUtils.isAppDebug()
+            ) AppUtils.launchApp(AppListViewModel.protectPackage.value)
         }.onFailure {
-
+            LogUtils.eTag("TimeTickReceiver", it)
         }
     }
 }
