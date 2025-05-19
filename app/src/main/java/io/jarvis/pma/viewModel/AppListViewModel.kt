@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.IntentUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPStaticUtils
 import io.jarvis.pma.receiver.SysIntentReceiver
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,11 +25,16 @@ object AppListViewModel : ViewModel() {
     val intent: SharedFlow<AppListIntent> = _intent
 
     /// 待保护包名
-    val protectPackage = MutableStateFlow(SPStaticUtils.getString("protect_package", ""))
+    val protectPackage = MutableStateFlow("")
 
     init {
         handleIntent()
         loadInstalledApps()
+        loadProtectPackage()
+    }
+
+    fun loadProtectPackage() = viewModelScope.launch(Dispatchers.IO) {
+        SPStaticUtils.getString("protect_package")?.let { protectPackage.tryEmit(it) }
     }
 
     fun onIntent(intent: AppListIntent) {
@@ -37,42 +43,38 @@ object AppListViewModel : ViewModel() {
         }
     }
 
-    private fun handleIntent() {
-        viewModelScope.launch {
-            intent.collect { appListIntent ->
-                when (appListIntent) {
-                    is AppListIntent.Refresh -> loadInstalledApps()
-                    is AppListIntent.LaunchApp -> {
-                        AppUtils.launchApp(appListIntent.packageName)
-                    }
+    private fun handleIntent() = viewModelScope.launch {
+        intent.collect { appListIntent ->
+            when (appListIntent) {
+                is AppListIntent.Refresh -> loadInstalledApps()
+                is AppListIntent.LaunchApp -> {
+                    AppUtils.launchApp(appListIntent.packageName)
+                }
 
-                    is AppListIntent.Protect -> {
-                        protectPackage.tryEmit(appListIntent.packageName)
-                        SPStaticUtils.put("protect_package", appListIntent.packageName)
-                    }
+                is AppListIntent.Protect -> {
+                    protectPackage.tryEmit(appListIntent.packageName)
+                    SPStaticUtils.put("protect_package", appListIntent.packageName)
+                }
 
-                    is AppListIntent.Install -> {
-                        //使用系统下载器下载文件，然后安装
-                        SysIntentReceiver.downloadAndInstallApk(appListIntent.url)
-                    }
+                is AppListIntent.Install -> {
+                    //使用系统下载器下载文件，然后安装
+                    SysIntentReceiver.downloadAndInstallApk(appListIntent.url)
+                }
 
-                    is AppListIntent.Uninstall -> {
-                        AppUtils.uninstallApp(appListIntent.packageName)
-                    }
+                is AppListIntent.Uninstall -> {
+                    AppUtils.uninstallApp(appListIntent.packageName)
                 }
             }
         }
     }
 
-    private fun loadInstalledApps() {
-        viewModelScope.launch {
-            _state.value = AppListViewState.Loading
-            try {
-                val apps = getInstalledApps()
-                _state.value = AppListViewState.Success(apps)
-            } catch (e: Exception) {
-                _state.value = AppListViewState.Error(e.message ?: "Unknown error")
-            }
+    private fun loadInstalledApps() = viewModelScope.launch(Dispatchers.IO) {
+        _state.value = AppListViewState.Loading
+        try {
+            val apps = getInstalledApps()
+            _state.value = AppListViewState.Success(apps)
+        } catch (e: Exception) {
+            _state.value = AppListViewState.Error(e.message ?: "Unknown error")
         }
     }
 

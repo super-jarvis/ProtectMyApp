@@ -1,19 +1,18 @@
 package io.jarvis.pma.receiver
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.blankj.utilcode.util.LogUtils
 import io.jarvis.pma.viewModel.AppListIntent
 import io.jarvis.pma.viewModel.AppListViewModel
 
 class PackageChangeReceiver() : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent?) {
-        when (intent?.action) {
-            Intent.ACTION_PACKAGE_ADDED,
-            Intent.ACTION_PACKAGE_REMOVED,
-            Intent.ACTION_PACKAGE_CHANGED -> {
-                AppListViewModel.onIntent(AppListIntent.Refresh)
-            }
-        }
+    @SuppressLint("UnsafeProtectedBroadcastReceiver")
+    override fun onReceive(context: Context, intent: Intent) {
+        LogUtils.dTag("PackageChangeReceiver", "onReceive ${intent.action} ${intent.data?.schemeSpecificPart}")
+        // 刷新列表
+        AppListViewModel.onIntent(AppListIntent.Refresh)
     }
 }

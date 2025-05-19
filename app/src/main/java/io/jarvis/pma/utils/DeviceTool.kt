@@ -52,7 +52,7 @@ object DeviceTool {
     /**
      * 通过shell判断app是否在前台运行
      */
-    private fun checkIsFront(pkg: String): Boolean {
+    fun checkIsFront(pkg: String): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PermissionUtils.permission(android.Manifest.permission.PACKAGE_USAGE_STATS).request()
         }

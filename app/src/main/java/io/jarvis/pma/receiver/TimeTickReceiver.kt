@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.SystemClock
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
+import io.jarvis.pma.utils.DeviceTool
+import io.jarvis.pma.viewModel.AppListViewModel
 import java.util.concurrent.atomic.AtomicBoolean
 
 class TimeTickReceiver : BroadcastReceiver() {
@@ -36,9 +38,8 @@ class TimeTickReceiver : BroadcastReceiver() {
             if (AppUtils.isAppDebug()) {
                 LogUtils.d("保活app中 ${intent.action}")
             }
-            // TODO: 2022/3/28 添加保活逻辑
             if (watching.get()) {
-
+                DeviceTool.checkIsFront(AppListViewModel.protectPackage.value)
             }
         }.onFailure {
 

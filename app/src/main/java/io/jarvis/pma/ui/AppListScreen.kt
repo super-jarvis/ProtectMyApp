@@ -84,23 +84,23 @@ fun AppListItem(viewModel: AppListViewModel, appInfo: AppInfo, onClick: () -> Un
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                bitmap = ImageUtils.drawable2Bitmap(appInfo.icon).asImageBitmap(),
-                contentDescription = null,
-                modifier = Modifier.size(48.dp)
-            )
-            Spacer(modifier = Modifier.size(16.dp))
-            Text(text = appInfo.name, style = MaterialTheme.typography.titleMedium)
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = appInfo.versionName, style = MaterialTheme.typography.bodySmall)
-            Spacer(modifier = Modifier.size(16.dp))
-//            Switch(checked = false, onCheckedChange = {})
             Checkbox(
                 checked = protectPackage == appInfo.packageName,
                 onCheckedChange = {
                     viewModel.onIntent(AppListIntent.Protect(appInfo.packageName))
                 })
+            Spacer(modifier = Modifier.size(16.dp))
+            Image(
+                bitmap = ImageUtils.drawable2Bitmap(appInfo.icon).asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier.size(48.dp),
+                contentScale = androidx.compose.ui.layout.ContentScale.FillWidth
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Column {
+                Text(text = appInfo.name, style = MaterialTheme.typography.titleMedium)
+                Text(text = appInfo.versionName, style = MaterialTheme.typography.bodySmall)
+            }
         }
     }
 }

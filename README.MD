@@ -25,17 +25,27 @@
 ## 一些思路和说明
 - 项目结构比较简单，使用mvi架构方式开发，一些逻辑图省事位置较随意，使用较多的object
 - 想要实现多种方式的应用间通信
-  - 广播机制
-  - http服务机制
+  - [x] 广播机制
+  - [ ] http服务机制
+- 应用间通信目前主要提供几个功能
+  - [ ] 下载并安装app
+  - [ ] 安装app
+  - [ ] 卸载app
+  - [ ] 设置保活应用的packageName
+  - [ ] 设置保活软件的版本更新检查地址，需要返回最新的版本号和下载地址
+- webhook清单：
+  - [ ] 设备启动，使用json的形式传参数，参数包括设备时间、设备编号、ip地址、mac地址、room版本、主板类型、内部存储空间、外部存储空、内存空间、cpu型号、cpu核心数量
+  - [ ] 保活软件进入后台或者前台
 - 保活应用实现思路：通过监听系统时间广播android.intent.action.TIME_TICK，大概1分钟一次，收到广播后便检查当前app是否存活，如果存活则返回，如果不存活则重启app。
 
-## 引用第三方开源库清单，感谢开源大佬
+## 引用第三方库清单，感谢开源大佬
 
-- [UtilCodex 一个包含各种Android工具类的实用库](https://github.com/Blankj/AndroidUtilCode)
+- [UtilCodex 一个包含各种Android工具类的实用库，虽然最近都不维护了，但是目前还是够用的](https://github.com/Blankj/AndroidUtilCode)
 - [Retrofit](https://github.com/square/retrofit)
 - [OkHttp](https://github.com/square/okhttp)
 - [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
 - [MQTT Android Service](https://github.com/eclipse/paho.mqtt.android)
+- [Fuel](https://github.com/kittinunf/fuel)
 
 ## 使用指南
 - 安装方式可以参考以下两种
