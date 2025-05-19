@@ -14,13 +14,30 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
+        vectorDrawables {
+            useSupportLibrary = true
+        }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        val password = "123456"
+        val alias = "a"
+        val filePath = "../sign.jks"
+        create("release") {
+            keyAlias = alias
+            keyPassword = password
+            storeFile = file(filePath)
+            storePassword = password
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            isShrinkResources = false
+            multiDexEnabled = true
+            signingConfig = signingConfigs["release"]
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

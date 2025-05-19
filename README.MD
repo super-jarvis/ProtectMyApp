@@ -59,6 +59,7 @@
 - [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
 - [MQTT Android Service](https://github.com/eclipse/paho.mqtt.android)
 - [Fuel](https://github.com/kittinunf/fuel)
+- [RustDesk](https://github.com/rustdesk/rustdesk)
 
 ## 使用指南
 
