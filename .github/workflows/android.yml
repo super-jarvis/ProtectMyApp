@@ -23,6 +23,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assembleRelease
 
+      - uses: release-drafter/release-drafter@v6
+        id: release_drafter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload Release Asset
         id: upload-release-asset
         uses: softprops/action-gh-release@v2
@@ -31,7 +36,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: ${{ github.event.release.body }}
+          body: ${{ steps.release_drafter.outputs.body }}
           draft: false
           prerelease: false
           files: |
