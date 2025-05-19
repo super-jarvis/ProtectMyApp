@@ -5,6 +5,7 @@ on:
     branches: [ "master" ]
     paths:
       - "app/**"
+      - ".github/**"
 
 env:
   TAG_NAME: ${{ github.ref_name }}
@@ -20,6 +21,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '17'
+          distribution: 'temurin'
           cache: gradle
 
       - name: Grant execute permission for gradlew
