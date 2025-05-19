@@ -1,19 +1,15 @@
 package io.jarvis.pma.utils
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.PathUtils
-import com.blankj.utilcode.util.PermissionUtils
-import com.blankj.utilcode.util.PhoneUtils
 import com.blankj.utilcode.util.ShellUtils
 import com.blankj.utilcode.util.Utils
 import io.jarvis.pma.MainActivity
@@ -25,14 +21,10 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.util.UUID
 
-
 object DeviceTool {
 
-    @SuppressLint("MissingPermission")
     fun deviceId(): String {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) DeviceUtils.getUniqueDeviceId()
-            .uppercase()
-        else PhoneUtils.getSerial().replace("\n", "").replace("\t", "").replace("\r", "")
+        return DeviceUtils.getUniqueDeviceId()
     }
 
     fun exec(cmd: String): ShellUtils.CommandResult {
@@ -53,13 +45,14 @@ object DeviceTool {
      * 通过shell判断app是否在前台运行
      */
     fun checkIsFront(pkg: String): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PermissionUtils.permission(android.Manifest.permission.PACKAGE_USAGE_STATS).request()
-        }
         return ShellUtils.execCmd(
             "dumpsys window | grep mCurrentFocus",
-            DeviceUtils.isDeviceRooted()
-        ).successMsg.contains(pkg) || AppUtils.isAppForeground(pkg)
+            AppUtils.isAppRoot()
+        ).let {
+            if (AppUtils.isAppDebug()) LogUtils.d("当前运行应用：", it)
+            return it.successMsg.contains(pkg)
+        }
+//                || AppUtils.isAppForeground(pkg)//这个程序在后台的时候无法获取到数据
     }
 
     /**

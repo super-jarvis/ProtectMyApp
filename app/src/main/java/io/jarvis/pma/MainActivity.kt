@@ -2,6 +2,7 @@ package io.jarvis.pma
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
@@ -85,6 +86,12 @@ class MainActivity : ComponentActivity() {
             PermissionConstants.STORAGE,
             PermissionConstants.PHONE,
         ).request()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            PermissionUtils.permission(
+                android.Manifest.permission.QUERY_ALL_PACKAGES,
+                android.Manifest.permission.PACKAGE_USAGE_STATS
+            ).request()
+        }
 //        val packagePermission = PermissionUtils.getPermissions()
 //        LogUtils.d("app需要的权限清单: $packagePermission")
 //        packagePermission.filter { it.startsWith("android") }.forEach {

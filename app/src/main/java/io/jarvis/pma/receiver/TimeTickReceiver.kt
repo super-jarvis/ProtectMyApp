@@ -30,10 +30,11 @@ class TimeTickReceiver : BroadcastReceiver() {
             }
             if (AppUtils.isAppDebug()) {
                 LogUtils.d(
-                    "守护app中 protecting=${AppListViewModel.protectStatFlow.value} " +
-                            "packageName=${AppListViewModel.protectPackage.value} " +
-                            "isFront=$isFront " +
-                            "process=${ProcessUtils.getForegroundProcessName()}"
+                    "守护app中 protecting=${AppListViewModel.protectStatFlow.value} "
+                            + "packageName=${AppListViewModel.protectPackage.value} "
+                            + "isFront=$isFront "
+//                            + "process=${ProcessUtils.getForegroundProcessName()}"
+//                            + "currProcess=${ProcessUtils.getCurrentProcessName()}"
                 )
             }
             if (AppListViewModel.protectStatFlow.value

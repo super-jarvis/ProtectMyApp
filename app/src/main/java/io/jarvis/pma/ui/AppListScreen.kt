@@ -48,9 +48,7 @@ fun AppListScreen(viewModel: AppListViewModel) {
         is AppListViewState.Success -> {
             LazyColumn(contentPadding = PaddingValues(16.dp)) {
                 items(uiState.apps) { appInfo ->
-                    AppListItem(viewModel, appInfo) {
-                        viewModel.sendIntent(LaunchApp(appInfo.packageName))
-                    }
+                    AppListItem(viewModel, appInfo)
                 }
             }
         }
@@ -72,12 +70,12 @@ fun AppListScreen(viewModel: AppListViewModel) {
 }
 
 @Composable
-fun AppListItem(viewModel: AppListViewModel, appInfo: AppInfo, onClick: () -> Unit) {
+fun AppListItem(viewModel: AppListViewModel, appInfo: AppInfo) {
     val protectPackage by viewModel.protectPackage.collectAsState()
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable(onClick = { viewModel.sendIntent(LaunchApp(appInfo.packageName)) })
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -86,7 +84,7 @@ fun AppListItem(viewModel: AppListViewModel, appInfo: AppInfo, onClick: () -> Un
             Checkbox(
                 checked = protectPackage == appInfo.packageName,
                 onCheckedChange = {
-                    viewModel.sendIntent(AppListIntent.Protect(appInfo.packageName))
+                    viewModel.sendIntent(AppListIntent.Protect(if (protectPackage == appInfo.packageName) "" else appInfo.packageName))
                 })
             Spacer(modifier = Modifier.size(16.dp))
             Image(
