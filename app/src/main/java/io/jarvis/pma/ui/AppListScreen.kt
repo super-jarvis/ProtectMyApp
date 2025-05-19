@@ -36,8 +36,7 @@ import io.jarvis.pma.viewModel.AppListViewState
 
 @Composable
 fun AppListScreen(viewModel: AppListViewModel) {
-    val state by viewModel.state.collectAsState()
-
+    val state by viewModel.uiState.collectAsState()
 
     when (val uiState = state) {
         is AppListViewState.Loading -> {
@@ -50,7 +49,7 @@ fun AppListScreen(viewModel: AppListViewModel) {
             LazyColumn(contentPadding = PaddingValues(16.dp)) {
                 items(uiState.apps) { appInfo ->
                     AppListItem(viewModel, appInfo) {
-                        viewModel.onIntent(LaunchApp(appInfo.packageName))
+                        viewModel.sendIntent(LaunchApp(appInfo.packageName))
                     }
                 }
             }
@@ -64,7 +63,7 @@ fun AppListScreen(viewModel: AppListViewModel) {
             ) {
                 Text(text = "Error: ${uiState.message}")
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { viewModel.onIntent(AppListIntent.Refresh) }) {
+                Button(onClick = { viewModel.sendIntent(AppListIntent.Refresh) }) {
                     Text(text = "重试")
                 }
             }
@@ -87,7 +86,7 @@ fun AppListItem(viewModel: AppListViewModel, appInfo: AppInfo, onClick: () -> Un
             Checkbox(
                 checked = protectPackage == appInfo.packageName,
                 onCheckedChange = {
-                    viewModel.onIntent(AppListIntent.Protect(appInfo.packageName))
+                    viewModel.sendIntent(AppListIntent.Protect(appInfo.packageName))
                 })
             Spacer(modifier = Modifier.size(16.dp))
             Image(

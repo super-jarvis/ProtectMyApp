@@ -8,11 +8,11 @@ import com.blankj.utilcode.util.LogUtils
 import io.jarvis.pma.viewModel.AppListIntent
 import io.jarvis.pma.viewModel.AppListViewModel
 
-class PackageChangeReceiver() : BroadcastReceiver() {
+class PackageIntentReceiver() : BroadcastReceiver() {
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     override fun onReceive(context: Context, intent: Intent) {
         LogUtils.dTag("PackageChangeReceiver", "onReceive ${intent.action} ${intent.data?.schemeSpecificPart}")
         // 刷新列表
-        AppListViewModel.onIntent(AppListIntent.Refresh)
+        AppListViewModel.sendIntent(AppListIntent.Refresh)
     }
 }

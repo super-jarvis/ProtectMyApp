@@ -13,7 +13,7 @@ import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.ShellUtils
 import io.jarvis.pma.MainActivity
 import io.jarvis.pma.receiver.MyAppReceiver
-import io.jarvis.pma.receiver.PackageChangeReceiver
+import io.jarvis.pma.receiver.PackageIntentReceiver
 import io.jarvis.pma.receiver.TimeTickReceiver
 
 class ReceiverInitializer : Initializer<Unit> {
@@ -46,7 +46,7 @@ class ReceiverInitializer : Initializer<Unit> {
             addDataScheme("package")
         }
         ContextCompat.registerReceiver(
-            context, PackageChangeReceiver(), packageChangeFilter,
+            context, PackageIntentReceiver(), packageChangeFilter,
             ContextCompat.RECEIVER_EXPORTED
         )
     }
@@ -103,8 +103,8 @@ class ReceiverInitializer : Initializer<Unit> {
         LogUtils.d("初始化接收器")
         requestAllPermission()
         registerPackageChangeReceiver(context)
-//        registerTimeTickReceiver(context)
-//        registerMyAppReceiver(context)
+        registerTimeTickReceiver(context)
+        registerMyAppReceiver(context)
         setHomeActivity(context)
     }
 

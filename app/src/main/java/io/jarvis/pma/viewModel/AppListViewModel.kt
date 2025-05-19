@@ -1,7 +1,6 @@
 package io.jarvis.pma.viewModel
 
 import android.os.Build
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.AppUtils.AppInfo
@@ -9,72 +8,46 @@ import com.blankj.utilcode.util.IntentUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPStaticUtils
 import io.jarvis.pma.receiver.SysIntentReceiver
+import io.jarvis.pma.viewModel.mvi.BaseViewModel
+import io.jarvis.pma.viewModel.mvi.IUiIntent
+import io.jarvis.pma.viewModel.mvi.IUiState
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-object AppListViewModel : ViewModel() {
-
-    private val _state = MutableStateFlow<AppListViewState>(AppListViewState.Loading)
-    val state: StateFlow<AppListViewState> = _state
-
-    private val _intent = MutableSharedFlow<AppListIntent>()
-    val intent: SharedFlow<AppListIntent> = _intent
+object AppListViewModel : BaseViewModel<AppListViewState, AppListIntent>() {
 
     /// 待保护包名
     val protectPackage = MutableStateFlow("")
 
+    /// 是否保护
+    val protectStatFlow = MutableStateFlow(true)
+
     init {
-        handleIntent()
         loadInstalledApps()
         loadProtectPackage()
+    }
+
+    fun enableProtect() {
+        protectStatFlow.update { true }
+    }
+
+    fun disableProtect() {
+        protectStatFlow.update { false }
     }
 
     fun loadProtectPackage() = viewModelScope.launch(Dispatchers.IO) {
         SPStaticUtils.getString("protect_package")?.let { protectPackage.tryEmit(it) }
     }
 
-    fun onIntent(intent: AppListIntent) {
-        viewModelScope.launch {
-            _intent.emit(intent)
-        }
-    }
-
-    private fun handleIntent() = viewModelScope.launch {
-        intent.collect { appListIntent ->
-            when (appListIntent) {
-                is AppListIntent.Refresh -> loadInstalledApps()
-                is AppListIntent.LaunchApp -> {
-                    AppUtils.launchApp(appListIntent.packageName)
-                }
-
-                is AppListIntent.Protect -> {
-                    protectPackage.tryEmit(appListIntent.packageName)
-                    SPStaticUtils.put("protect_package", appListIntent.packageName)
-                }
-
-                is AppListIntent.Install -> {
-                    //使用系统下载器下载文件，然后安装
-                    SysIntentReceiver.downloadAndInstallApk(appListIntent.url)
-                }
-
-                is AppListIntent.Uninstall -> {
-                    AppUtils.uninstallApp(appListIntent.packageName)
-                }
-            }
-        }
-    }
-
     private fun loadInstalledApps() = viewModelScope.launch(Dispatchers.IO) {
-        _state.value = AppListViewState.Loading
+        sendState(AppListViewState.Loading)
         try {
             val apps = getInstalledApps()
-            _state.value = AppListViewState.Success(apps)
+            sendState(AppListViewState.Success(apps))
         } catch (e: Exception) {
-            _state.value = AppListViewState.Error(e.message ?: "Unknown error")
+            sendState(AppListViewState.Error(e.message ?: "Unknown error"))
         }
     }
 
@@ -90,15 +63,40 @@ object AppListViewModel : ViewModel() {
             .toList()
     }
 
+    override fun initialState(): AppListViewState = AppListViewState.Loading
+
+    override suspend fun handleEvent(intent: IUiIntent) {
+        when (intent) {
+            is AppListIntent.Refresh -> loadInstalledApps()
+            is AppListIntent.LaunchApp -> {
+                AppUtils.launchApp(intent.packageName)
+            }
+
+            is AppListIntent.Protect -> {
+                protectPackage.tryEmit(intent.packageName)
+                SPStaticUtils.put("protect_package", intent.packageName)
+            }
+
+            is AppListIntent.Install -> {
+                //使用系统下载器下载文件，然后安装
+                SysIntentReceiver.downloadAndInstallApk(intent.url)
+            }
+
+            is AppListIntent.Uninstall -> {
+                AppUtils.uninstallApp(intent.packageName)
+            }
+        }
+    }
+
 }
 
-sealed class AppListViewState {
+sealed class AppListViewState : IUiState {
     object Loading : AppListViewState()
     data class Success(val apps: List<AppInfo>) : AppListViewState()
     data class Error(val message: String) : AppListViewState()
 }
 
-sealed class AppListIntent {
+sealed class AppListIntent : IUiIntent {
     object Refresh : AppListIntent()
 
     /// 启动应用

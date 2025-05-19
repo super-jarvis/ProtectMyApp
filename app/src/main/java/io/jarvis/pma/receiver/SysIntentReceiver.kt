@@ -5,17 +5,17 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.PathUtils
 import com.blankj.utilcode.util.Utils
+import io.jarvis.pma.viewModel.AppListViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
-import androidx.core.net.toUri
-import kotlin.collections.set
 
 class SysIntentReceiver : BroadcastReceiver() {
 
@@ -70,7 +70,7 @@ class SysIntentReceiver : BroadcastReceiver() {
                 Intent.ACTION_BOOT_COMPLETED -> AppUtils.launchApp(AppUtils.getAppPackageName())
 
                 DownloadManager.ACTION_DOWNLOAD_COMPLETE -> {
-                    TimeTickReceiver.disableWatching()
+                    AppListViewModel.disableProtect()
                     val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1L)
                     LogUtils.d("系统下载完成通知 $downloadId")
                     val manager =
@@ -116,7 +116,7 @@ class SysIntentReceiver : BroadcastReceiver() {
                 else -> {}
             }
         }.onFailure {
-            TimeTickReceiver.enableWatching()
+            AppListViewModel.enableProtect()
         }
     }
 
@@ -128,7 +128,7 @@ class SysIntentReceiver : BroadcastReceiver() {
         } catch (e: Exception) {
             LogUtils.e(e)
         } finally {
-            TimeTickReceiver.enableWatching()
+            AppListViewModel.enableProtect()
         }
     }
 }

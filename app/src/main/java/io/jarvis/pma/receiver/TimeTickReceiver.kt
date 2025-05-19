@@ -8,24 +8,16 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
 import io.jarvis.pma.utils.DeviceTool
 import io.jarvis.pma.viewModel.AppListViewModel
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TimeTickReceiver : BroadcastReceiver() {
 
     companion object {
         @Volatile
         var lastTime: Long = 0L
-
-        //// 是否在监听
-        var watching = AtomicBoolean(true)
-
-        fun enableWatching() {
-            watching.set(true)
-        }
-
-        fun disableWatching() {
-            watching.set(false)
-        }
+        private val coroutineScope = CoroutineScope(Dispatchers.IO)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -36,10 +28,15 @@ class TimeTickReceiver : BroadcastReceiver() {
             }
             lastTime = SystemClock.uptimeMillis()
             if (AppUtils.isAppDebug()) {
-                LogUtils.d("保活app中 ${intent.action}")
+                LogUtils.d("守护app中...")
             }
-            if (watching.get()) {
-                DeviceTool.checkIsFront(AppListViewModel.protectPackage.value)
+            coroutineScope.launch {
+                AppListViewModel.protectStatFlow.collect {
+                    if (AppUtils.isAppDebug()) {
+                        LogUtils.d("保活app中 $it")
+                    }
+                    if (it) DeviceTool.checkIsFront(AppListViewModel.protectPackage.value)
+                }
             }
         }.onFailure {
 
