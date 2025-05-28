@@ -6,11 +6,6 @@
 - 本项目专门为安卓工控设备开发，工控机需要root权限。
 - 本项目使用Jetpack Compose作为UI框架，使用Kotlin作为主要编程语言，使用MVI架构设计，一些逻辑图省事位置较随意，直接使用object。
 
-## 项目统计
-
-[![GitHub Stars](https://img.shields.io/github/stars/super-jarvis/ProtectMyApp?style=social)](https://github.com/super-jarvis/ProtectMyApp)
-[![GitHub Forks](https://img.shields.io/github/forks/super-jarvis/ProtectMyApp?style=social)](https://github.com/super-jarvis/ProtectMyApp)
-
 ## 功能模块TODO清单
 
 - 主界面
@@ -87,3 +82,13 @@
 
 如果这个项目对您有帮助，请点个⭐️鼓励一下，如果您有钞能力请考虑捐赠以支持我继续维护和开发。您的支持将鼓励我继续开发新的功能和优化代码。
 ![感谢您的慷慨捐助](docs/img_zfb.jpg)
+
+## 项目统计
+
+[![GitHub Stars](https://img.shields.io/github/stars/super-jarvis/ProtectMyApp?style=social)](https://github.com/super-jarvis/ProtectMyApp)
+[![GitHub Forks](https://img.shields.io/github/forks/super-jarvis/ProtectMyApp?style=social)](https://github.com/super-jarvis/ProtectMyApp)
+<p align="center">
+  <a href="https://star-history.com/#All-Hands-AI/OpenHands&Date">
+    <img src="https://api.star-history.com/svg?repos=super-jarvis/ProtectMyApp&type=Date" width="500" alt="Star History Chart">
+  </a>
+</p>
